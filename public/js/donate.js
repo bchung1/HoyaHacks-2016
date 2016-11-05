@@ -25,7 +25,7 @@ if (hasGetUserMedia()) {
             context.imageSmoothingEnabled = false;
             // "image/webp" works in Chrome.
             // Other browsers will fall back to image/png.
-            var snap = canvas.toDataURL('image/webp');
+            var snap = canvas.toDataURL('image/jpeg');
             $("#snap").attr("src", snap);
         }
     }
@@ -41,7 +41,7 @@ if (hasGetUserMedia()) {
     });
 
     function uploadPhoto(lat, long) {
-        var snap = canvas.toDataURL('image/webp');
+        var snap = canvas.toDataURL('image/jpeg');
         var results = reverseGeolocation(lat, long, function(address) {
             $.ajax({
                 type: "POST",
@@ -62,6 +62,8 @@ if (hasGetUserMedia()) {
     }
 
     function reverseGeolocation(lat, long, callback) {
+
+        var snap = canvas.toDataURL('image/jpeg');
         $.ajax({
             type: "GET",
             url: "https://maps.googleapis.com/maps/api/geocode/json",

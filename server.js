@@ -41,8 +41,9 @@ function getTags(base64){
 
 	clar.models.predict(Clarifai.GENERAL_MODEL, {base64: base64}).then(
   		function(response) {
-  			console.log(response);
-  		},
+  			console.log(response.data.outputs[0].data.concepts);
+  			console.log("\n\n\n Done \n\n\n");
+   		},
   		function(err) {
     		console.error("Try again!\n");
     	}
