@@ -1,3 +1,5 @@
+var apiKey = 'AIzaSyC4XPcPbOT1eGbtl8LJClco6NkoalhqW2w';
+
 function hasGetUserMedia() {
     return !!(navigator.getUserMedia || navigator.webkitGetUserMedia ||
         navigator.mozGetUserMedia || navigator.msGetUserMedia);
@@ -40,21 +42,42 @@ if (hasGetUserMedia()) {
 
     function uploadPhoto(lat, long) {
         var snap = canvas.toDataURL('image/webp');
-        $.ajax({
-            type: "POST",
-            url: "http://localhost:3000/photo",
-            data: {
-                snap: snap,
-                location: {
-                    lat: lat,
-                    long: long
+        var results = reverseGeolocation(lat, long, function(address) {
+            $.ajax({
+                type: "POST",
+                url: "http://localhost:3000/photo",
+                data: {
+                    snap: snap,
+                    location: {
+                        lat: lat,
+                        long: long
+                    },
+                    address: address
+                },
+                success: function(data) {
+
                 }
+            });
+        });
+    }
+
+    function reverseGeolocation(lat, long, callback) {
+        $.ajax({
+            type: "GET",
+            url: "https://maps.googleapis.com/maps/api/geocode/json",
+            data: {
+                latlng: lat + "," + long,
+                key: apiKey
             },
             success: function(data) {
-
+                callback(data.results[0].formatted_address);
+            },
+            error: function(error) {
+                console.log(error);
             }
         });
     }
+
 
     // Not showing vendor prefixes or code that works cross-browser.
     navigator.getUserMedia({

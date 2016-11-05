@@ -19,6 +19,10 @@ app.post('/photo', function(req, res){
   var snap = req.body.snap;
   var lat = req.body.location.lat;
   var long = req.body.location.long;
+  var address = req.body.address;
+  console.log(snap);
+  console.log(lat + long);
+  console.log(address);
 });
 
 app.listen(3000, function() {
