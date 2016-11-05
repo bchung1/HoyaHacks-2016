@@ -1,15 +1,5 @@
 $( document ).ready(function() {
-  $('#collectorButton').onClick(function(){
-    $.ajax({
-        type: "GET",
-        url: "http://localhost:3000/searchRep",
-        success: function(data) {
-          
-        },
-        error: function(error) {
-            console.log(error);
-        }
-    });
+  $('#donatorBtn').click(function(){
+      window.location = "http://6a2f514e.ngrok.io/donate";
   });
-
 });
