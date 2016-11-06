@@ -1,5 +1,5 @@
 $( document ).ready(function() {
   $('#donatorBtn').click(function(){
-      window.location = "http://localhost:3000/donate";
+      window.location = "https://353594a9.ngrok.io/donate";
   });
 });

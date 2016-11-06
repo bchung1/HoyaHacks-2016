@@ -19,6 +19,7 @@ body {
 }
 
 .intro-message>h1 {
+    color: #3891A6;
     margin: 0;
     text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.6);
     font-size: 5em;
@@ -32,4 +33,29 @@ body {
 
 .intro-message>h3 {
     text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.6);
+}
+
+.btn-file {
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-file input[type=file] {
+    position: absolute;
+    top: 0;
+    right: 0;
+    min-width: 100%;
+    min-height: 100%;
+    font-size: 100px;
+    text-align: right;
+    filter: alpha(opacity=0);
+    opacity: 0;
+    outline: none;
+    background: white;
+    cursor: inherit;
+    display: block;
+}
+
+#fileSelectorWrapper {
+    margin-bottom: 5%;
 }

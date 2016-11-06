@@ -20,19 +20,26 @@
                         <h1>Take a Photo Of Your Donation!</h1>
                         <h3>With your photo we will connect you to a business in need of your donation</h3>
                         <hr class="intro-divider">
-                        <video autoplay></video>
+                        <video id="videoStream" autoplay></video>
+                        <div id="fileSelectorWrapper" class="btn btn-default btn-file">
+                            Take or Choose Picture
+                            <input id="fileSelector" class="btn btn-default btn-lg" type="file" accept="image/*;capture=camera">
+                        </div>
 
                         <canvas style="display:none;"></canvas>
                         <ul class="list-inline intro-social-buttons">
                             <li>
                                 <button id="snapBtn" class="btn btn-default btn-lg" type="button" name="button" data-toggle="modal" data-target="#snapModal">Take A Photo!</button>
                             </li>
+                            <button id="uploadMobile" class="btn btn-primary btn-lg" type="button" name="button">Upload</button>
                         </ul>
                     </div>
                 </div>
             </div>
-
         </div>
+    </div>
+    <div id="random">
+
     </div>
 
     <!-- snap modal -->
