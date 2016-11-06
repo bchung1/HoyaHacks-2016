@@ -27,5 +27,17 @@ var donorList = new Vue({
         }
     }
 });
+$.dynatableSetup({
+    features: {
+        paginate: false,
+        sort: true,
+        pushState: false,
+        search: false,
+        recordCount: false,
+        perPageSelect: false
+    }
+});
 
 $('#donorList').hide();
+
+$('#donorList').dynatable();

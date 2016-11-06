@@ -74,6 +74,7 @@ $("#upload").click(function() {
     navigator.geolocation.getCurrentPosition(function(position) {
         var snap = canvas.toDataURL('image/jpeg');
         var tags = $('#tagsInput').val();
+        console.log(tags);
         uploadPhoto(position.coords.latitude, position.coords.longitude, snap,tags);
     });
 });
@@ -212,3 +213,19 @@ recognition.onresult = function(event) { //the event holds the results
         }
     } //end for loop
 };
+
+
+$.dynatableSetup({
+    features: {
+        paginate: false,
+        sort: true,
+        pushState: false,
+        search: false,
+        recordCount: false,
+        perPageSelect: false
+    }
+});
+
+$('#collectorList').hide();
+
+$('#collectorList').dynatable();

@@ -1,5 +1,5 @@
 body {
-    background-color: #E7DFC6;
+    background-color: #9CDE9F;
     margin: 0;
     height: 100vh;
     width: 100vw;
@@ -20,7 +20,7 @@ body {
 }
 
 .intro-message>h1 {
-    color: #3891A6;
+    color: #539CBC;
     margin: 0;
     text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.6);
     font-size: 5em;
@@ -99,6 +99,10 @@ body {
     color: black;
     margin: 20px;
     border: 1px solid black;
+}
+
+.table td {
+    border: solid 1px black;
 }
 
 .table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th {
