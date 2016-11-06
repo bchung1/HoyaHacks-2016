@@ -3,9 +3,14 @@ var apiKey = 'AIzaSyC4XPcPbOT1eGbtl8LJClco6NkoalhqW2w';
     if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
         $('#videoStream').hide();
         $('#snapBtn').hide();
+        $('#tagsBtnStart').show();
+        $('#tagsTextArea').show();
+
     }else{
       $('#fileSelectorWrapper').hide();
       $('#uploadMobile').hide();
+      $('#tagsBtnStart').hide();
+      $('#tagsTextArea').hide();
     }
 })();
 
@@ -42,6 +47,16 @@ $("#snapBtn").click(function() {
     snapshot();
 });
 
+$('#upload').hide();
+
+$('#recordTagsBtn').click(function(){
+  $('#tagsBtnStart').show();
+  $('#tagsTextArea').show();
+  $('#snapBtn').hide();
+  $(video).hide();
+  $('#upload').show();
+});
+
 function snapshot() {
     if (localMediaStream) {
         canvas.width = video.videoWidth - 70;
@@ -58,17 +73,19 @@ function snapshot() {
 $("#upload").click(function() {
     navigator.geolocation.getCurrentPosition(function(position) {
         var snap = canvas.toDataURL('image/jpeg');
-        uploadPhoto(position.coords.latitude, position.coords.longitude, snap);
+        var tags = $('#tagsInput').val();
+        uploadPhoto(position.coords.latitude, position.coords.longitude, snap,tags);
     });
 });
 
 $('#uploadMobile').click(function() {
-  console.log("upload clicked");
     var file = $('#fileSelector').get(0).files[0];
     var FR= new FileReader();
     FR.onload = function(e) {
       navigator.geolocation.getCurrentPosition(function(position) {
-          uploadPhoto(position.coords.latitude, position.coords.longitude,e.target.result);
+          var tags = $('#tagsInput').val();
+          console.log(tags);
+          uploadPhoto(position.coords.latitude, position.coords.longitude,e.target.result,tags);
       });
    };
    if (file) {
@@ -76,7 +93,7 @@ $('#uploadMobile').click(function() {
 }
 });
 
-function uploadPhoto(lat, long, snap) {
+function uploadPhoto(lat, long, snap, tags) {
     var results = reverseGeolocation(lat, long, function(address) {
         $.ajax({
             type: "POST",
@@ -87,13 +104,11 @@ function uploadPhoto(lat, long, snap) {
                     lat: lat,
                     long: long
                 },
-                address: address
+                address: address,
+                tags:tags
             },
             success: function(data) {
-              var res = data.reduce(function(acc,x){
-                    return acc + x.name + " ";
-              },"");
-                console.log(res);
+                collectorList.setCollectors(data);
             },
             error: function(error) {
                 console.log(error);
@@ -101,6 +116,21 @@ function uploadPhoto(lat, long, snap) {
         });
     });
 }
+
+var collectorList = new Vue({
+    el: '#collectorList',
+    data: {
+        collectors: ''
+    },
+    methods: {
+        setCollectors: function(collectors) {
+            this.collectors = collectors;
+            $('#collectorList').show();
+        }
+    }
+});
+
+$('#collectorList').hide();
 
 function reverseGeolocation(lat, long, callback) {
     var snap = canvas.toDataURL('image/jpeg');
@@ -119,3 +149,66 @@ function reverseGeolocation(lat, long, callback) {
         }
     });
 }
+
+$('#tagsBtnStart').click(function(){
+  recognition.start();
+});
+
+$('#tagsBtnEnd').click(function(){
+  recognition.stop();
+});
+
+$('#tagsNext').click(function(){
+  $("#snapModal").hide();
+});
+
+if (!('webkitSpeechRecognition' in window)) {
+    //Speech API not supported here…
+} else { //Let’s do some cool stuff :)
+    var recognition = new webkitSpeechRecognition(); //That is the object that will manage our whole recognition process.
+    recognition.continuous = true; //Suitable for dictation.
+    recognition.interimResults = true; //If we want to start receiving results even if they are not final.
+    //Define some more additional parameters for the recognition:
+    recognition.lang = "en-US";
+    recognition.maxAlternatives = 1; //Since from our experience, the highest result is really the best...
+}
+
+
+recognition.onstart = function() {
+  $('#liveIcon').show();
+  $('#tagsBtnEnd').show();
+};
+
+recognition.onend = function() {
+  $('#liveIcon').hide();
+  $('#tagsBtnEnd').hide();
+};
+
+$('#tagsInput').tagsinput({
+      allowDuplicates: false,
+        itemValue: 'id',  // this will be used to set id of tag
+        itemText: 'label' // this will be used to set text of tag
+    });
+
+recognition.onresult = function(event) { //the event holds the results
+    //Yay – we have results! Let’s check if they are defined and if final or not:
+    if (typeof(event.results) === 'undefined') { //Something is wrong…
+        recognition.stop();
+        return;
+    }
+
+    for (var i = event.resultIndex; i < event.results.length; ++i) {
+        if (event.results[i].isFinal) { //Final results
+            var currTag =  event.results[i][0].transcript.toLowerCase();
+            $('#tagsInput').tagsinput('add', {id:currTag ,label:currTag});
+             //Of course – here is the place to do useful things with the results.
+        } else { //i.e. interim...
+          var currTag =  event.results[i][0].transcript.toLowerCase();
+          if(currTag === "stop"){
+            recognition.stop();
+            return;
+          }
+          //You can use these results to give the user near real time experience.
+        }
+    } //end for loop
+};
